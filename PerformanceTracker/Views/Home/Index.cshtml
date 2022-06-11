@@ -1,0 +1,45 @@
+﻿@using PerformanceTracker.Models
+@{ViewData["Title"] = "Home Page";}
+@model PerformanceTracker.ViewModels.HomeView
+@using Microsoft.AspNetCore.Http;
+
+<h1>Welcome @Model.Name</h1>
+<hr />
+<div class="row">
+    <div class="col">
+        <h5>Current Groups</h5>
+        <div class="list-group">
+            @foreach (var group in Model.Groups)
+            {
+                @if (Context.Session.GetInt32("userid") == group.OwnerId)
+                {
+                    @Html.ActionLink(group.Title + " (owner)", "GroupDetail", "Group",
+                   new { groupId = group.Id }, // giving parameter to IActionResult function
+                   new { @class = "list-group-item list-group-item-action" })//html attribute
+                }
+                else
+                {
+                    @Html.ActionLink(group.Title, "GroupDetail", "Group",
+                   new { groupId = group.Id }, // giving parameter to IActionResult function
+                   new { @class = "list-group-item list-group-item-action" })//html attribute
+                }
+            }
+        </div>
+    </div>
+    <div class="col">
+        <h5>Current Tasks</h5>
+        <div class="list-group">
+            @foreach (var task in Model.Tasks)
+            {
+                @if (true)
+                {
+                    @Html.ActionLink(task.Content, "TaskDetail", "Task",
+                            new { taskId = task.Id }, // giving parameter to IActionResult function
+                            new { @class = "list-group-item list-group-item-action" })//html attribute
+                }
+            }
+        </div>
+    </div>
+</div>
+
+

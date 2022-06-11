@@ -1,0 +1,86 @@
+﻿@model PerformanceTracker.ViewModels.TaskView
+@using Microsoft.AspNetCore.Http;
+
+@{
+    ViewData["Title"] = "Group";
+}
+
+<div class="row">
+    <div class="col-10">
+        <div class="row">
+            <h5>@Model.Content</h5>
+        </div>
+        <div class="row">
+            <p>@Model.Explanation</p>
+        </div>
+    </div>
+    <div class="col-2">
+        <div class="row"><h5>Start Date: </h5>@Model.StartDate</div>
+        <div class="row"> <h5>Due Date: </h5>@Model.DueDate</div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        @foreach (var item in Model.TaskMembers)
+        {
+            @if (item.UserId == Context.Session.GetInt32("userid"))
+            {
+                @item.Status.Value
+
+                @if (@item.Status.Id == 4)
+                {
+                    <div class="row"> <p>Waiting for start date of this task to complete</p></div>
+                }
+                else if (@item.Status.Id == 1)
+                {
+                    <div class="row"> <p>You have completed this task successfully.</p></div>
+                }
+                else if (@item.Status.Id == 2)
+                {
+                    <div class="row"> <p>You have failed since you didn't complete this task on time.</p></div>
+                }
+                else if (@item.Status.Id == 3)
+                {
+                    <form asp-action="CompleteTask" method="post">
+                        <div class="form-group">
+                            <input asp-for="@Model.TaskId" type="hidden" value="@item.TaskId" />
+                            <input type="submit" value="Complete" class="btn btn-success" />
+                        </div>
+                    </form>
+                }
+            }
+        }
+    </div>
+</div>
+
+<div class="row">
+    <h5>Assigned Users</h5>
+</div>
+<div class="row">
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">User</th>
+                <th scope="col">Email</th>
+                <th scope="col">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.TaskMembers)
+            {
+                <tr>
+                    <td>@item.User.FirstName @item.User.LastName</td>
+                    <td>@item.User.Email</td>
+                    <td>@item.Status.Value</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="row">
+    @Html.ActionLink("Go To Group", "GroupDetail", "Group",
+             new { groupId = Model.GroupId }, // giving parameter to IActionResult function
+           null)
+</div>

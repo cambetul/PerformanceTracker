@@ -1,0 +1,89 @@
+﻿@model PerformanceTracker.ViewModels.MessageBoardView
+@{ ViewData["Title"] = "Message Board"; }
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    input[type="text"],
+    select,
+    textarea {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        resize: vertical;
+    }
+
+    body {
+        margin: 0 auto;
+        height: auto;
+        max-width: 800px;
+        padding: 0 20px;
+    }
+
+    .container-message {
+        border-bottom: 1px solid #dedede;
+        padding: 5px;
+        margin: 10px 0;
+    }
+
+        .container-message::after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+
+    .time-left {
+        float: left;
+        color: #999;
+    }
+</style>
+
+<h1>@Model.Title</h1>
+<hr />
+
+@foreach (var message in Model.AllMessages)
+{
+<div class="media">
+    <div class="media-body">
+        <div class="container-message">
+            <div class="row">
+                <div class="column left"
+                     style="float: left; padding: 10px; width: 25%; box-sizing: border-box">
+                    <b>@message.User.FirstName @message.User.LastName</b> <br />
+                    @message.User.Email<br />
+                    <small>@message.Time</small>
+                </div>
+                <div class="column right" style=" float: right; padding: 10px; width: 75%; box-sizing: border-box;">
+                    @message.Content
+                </div>
+            </div>
+        </div>
+    </div>
+</div>}
+
+<br />
+<br />
+<div class="row">
+    <div class="form-group">
+        <form asp-action="SendMessage" method="post">
+            <input type="hidden"
+                   value="@Model.MessageTitleId"
+                   asp-for="MessageTitleId" />
+            <div class="row">
+                <div class="col-11">
+                    <input required
+                           asp-for="NewMessage"
+                           class="form-control"
+                           type="text"
+                           placeholder="Type a message" size="100" />
+                </div>
+                <div class="col-1">
+                    <input type="submit" value="Send" class="btn btn-primary" size="100" />
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

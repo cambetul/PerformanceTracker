@@ -1,0 +1,138 @@
+﻿@model PerformanceTracker.ViewModels.GroupView
+@using Microsoft.AspNetCore.Http;
+
+@{
+    ViewData["Title"] = "Group";
+}
+
+<h1>@Model.Title</h1>
+<div class="col-sm-10">
+    @Html.DisplayFor(model => model.NumberOfMembers) members
+</div>
+<hr />
+
+<div>
+    <div class="row">
+        <div class="col">
+            <h5>Tasks</h5>
+            @*list current tasks*@
+            @foreach (var t in Model.Tasks)
+            {
+                @Html.ActionLink(t.Content, "TaskDetail", "Task",
+                 new { taskId = t.Id }, // giving parameter to IActionResult function
+                 new { @class = "list-group-item list-group-item-action" })//html attribute
+            }
+            @*create new task*@
+            @if (Context.Session.GetInt32("userid") == Model.ownerId)
+            {
+                <input type="button" name="answer" value="New Task" onclick="newTask()" class="btn btn-primary" />
+                <form id="add_new_task" asp-action="GroupDetail" method="post" style="display: none">
+                    <input type="hidden" value="@Model.Id" name="Id" />
+                    <div class="form-group">
+                        <label asp-for="NewTask.Content" class="control-label">Title</label>
+                        <input required asp-for="NewTask.Content" class="form-control" type="text" />
+                        <span asp-validation-for="NewTask.Content" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="NewTask.Explanation" class="control-label">Explanation</label>
+                        <textarea required asp-for="NewTask.Explanation" class="form-control" type="text" rows="5">Explanation</textarea>
+                        <span asp-validation-for="NewTask.Explanation" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="SelectedMembersIds" class="control-label">Select Members</label>
+                        <select asp-for="SelectedMembersIds" class="form-select" multiple data-mdb-filter="true" style="width:100%; required">
+                            @foreach (var u in Model.Members)
+                            {
+                                <option value="@u.Id">@u.FirstName @u.LastName - @u.Email</option>
+                            }
+                        </select>
+                    </div>
+
+                    @*is public için select all yapan check box konulacak ve otomatik olarak listedeki herkesi seçecek*@
+                    <div class="form-group">
+                        <label asp-for="NewTask.StartDate" class="control-label">Start Date</label>
+                        <input class="form-control" asp-for="NewTask.StartDate" />
+                        <span asp-validation-for="NewTask.StartDate" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="NewTask.DueDate" class="control-label">Due Date</label>
+                        <input class="form-control" asp-for="NewTask.DueDate" />
+                        <span asp-validation-for="NewTask.DueDate" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Create" class="btn btn-primary" />
+                    </div>
+                </form>
+            }
+        </div>
+
+        <div class="col">
+            <h5>Message Titles</h5>
+
+            @*list current message titles*@
+            @foreach (var m in Model.MessageTitles)
+            {
+                @Html.ActionLink(m.Title, "MessageBoard", "Message",
+                 new { messageTitleId = m.Id }, // giving parameter to IActionResult function
+                 new { @class = "list-group-item list-group-item-action" })//html attribute
+            }
+            @*create new message title*@
+            <input type="button" name="answer" value="New Message Title" onclick="newMessageTitle()" class="btn btn-primary" />
+            <form id="add_new_message_title" asp-action="GroupDetail" method="post" style="display: none">
+                <input type="hidden" value="@Model.Id" name="Id" />
+                <div class="form-group">
+                    <label asp-for="NewMessageTitle.Title" class="control-label">Title</label>
+                    <input required asp-for="NewMessageTitle.Title" class="form-control" type="text" />
+                    <span asp-validation-for="NewMessageTitle.Title" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@if (Context.Session.GetInt32("userid") == Model.ownerId)
+{
+    <div class="row">
+        @Html.ActionLink("Edit Group", "EditGroup", "Group",
+               new { groupId = Model.Id }, // giving parameter to IActionResult function
+             null)
+    </div>
+    <div class="row">
+        <form asp-action="DeleteGroup" method="post">
+            <input type="hidden" value="@Model.Id" name="Id" />
+            <button type="submit" class="btn btn-danger">Delete Group</button>
+        </form>
+    </div>
+}
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-warning row" role="alert" style="width: 100%">
+        @ViewBag.Error
+    </div>
+}
+
+
+<script>
+    function newTask() {
+        if (document.getElementById("add_new_task").style.display == "none") {
+            document.getElementById("add_new_task").style.display = "block";
+        } else if (
+            document.getElementById("add_new_task").style.display == "block"
+        ) {
+            document.getElementById("add_new_task").style.display = "none";
+        }
+    }
+
+    function newMessageTitle() {
+        if (document.getElementById("add_new_message_title").style.display == "none") {
+            document.getElementById("add_new_message_title").style.display = "block";
+        } else if (
+            document.getElementById("add_new_message_title").style.display == "block"
+        ) {
+            document.getElementById("add_new_message_title").style.display = "none";
+        }
+    }
+</script>

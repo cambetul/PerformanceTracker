@@ -1,0 +1,55 @@
+﻿@model PerformanceTracker.ViewModels.EditGroupView
+@{
+    ViewData["Title"] = "Edit Group";
+}
+<h1>@Model.Title</h1>
+<hr />
+<form asp-action="EditGroup" method="post">
+    <input type="hidden" value="@Model.Id" name="Id" />
+    <div class="row">
+        <div class="form-group">
+            <label asp-for="NewTitle" class="control-label">New Title</label>
+            <input asp-for="NewTitle" class="form-control" type="text" style="width:100%; " />
+            <span asp-validation-for="NewTitle" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <div class="form-group">
+                <label asp-for="NewUsersIds" class="control-label">Add New Members</label>
+                <select class="form-select" multiple data-mdb-filter="true" asp-for="NewUsersIds" style="width:100%; ">
+                    @foreach (var u in Model.Others)
+                    {
+                        <option value="@u.Id">@u.FirstName @u.LastName - @u.Email</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-group">
+                <label asp-for="NewUsersIds" class="control-label">Remove Members</label>
+                <select class="form-select" multiple data-mdb-filter="true" asp-for="DeletedUsersIds" style="width:100%; ">
+                    @foreach (var u in Model.Members)
+                    {
+                        <option value="@u.Id">@u.FirstName @u.LastName - @u.Email</option>
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group">
+            <input type="submit" value="Edit" class="btn btn-primary" style="width:100%;" />
+        </div>
+    </div>
+
+
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-warning" role="alert">
+            @ViewBag.Error
+        </div>
+    }
+</form>
+

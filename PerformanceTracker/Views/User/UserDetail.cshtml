@@ -1,0 +1,87 @@
+﻿@model PerformanceTracker.ViewModels.UserView
+
+@{ ViewData["Title"] = "User"; }
+
+<style>
+        * {
+            box-sizing: border-box;
+        }
+
+        .container-performance {
+            width: 100%;
+            height: 100%;
+            display: block;
+            margin: 0 auto;
+        }
+        /* Create four equal columns that floats next to each other */
+        .column {
+            margin: 10px;
+            float: left;
+            width: 20%;
+            padding: 10px;
+            border-radius: 20px;
+            padding-top: 10px;
+            /*        height: 150px;
+    */ /* Should be removed. Only for demonstration */
+        }
+
+        .row {
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .row-text {
+            text-align: center;
+            margin-bottom: 100px;
+        }
+
+        .column-3 {
+            background-color: #F0F0F0;
+            border-radius: 15px;
+            width: 27%;
+            margin: 14px;
+            margin-top: 35px;
+        }
+</style>
+
+<div class="text-center">
+    <h1 class="display-4"> @Model.User.FirstName @Model.User.LastName </h1>
+    <h4 class="display-6"> @Model.User.Email </h4>
+</div>
+<hr />
+<div class="container-performance">
+    <div class="row">
+        <div class="column" style="background-color:#9cffa7;">
+            <h2>Succeed</h2>
+            <h1>@Model.Succeed</h1>
+        </div>
+        <div class="column" style="background-color:#ffee90;">
+            <h2>Ongoing</h2>
+            <h1>@Model.OnGoing</h1>
+        </div>
+        <div class="column" style=" background-color: #93f5f9;">
+            <h2>Not Started</h2>
+            <h1>@Model.NotStarted</h1>
+        </div>
+        <div class="column" style="background-color:#fba0a0;">
+            <h2>Failed</h2>
+            <h1>@Model.Failed</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="column-3">
+            <h2>Owned Groups</h2>
+            <h1>@Model.OwnedGroupCount</h1>
+        </div>
+        <div class="column-3">
+            <h2>Membered Groups</h2>
+            <h1>@Model.MemberedGroupCount</h1>
+        </div>
+        <div class="column-3">
+            <h2>Membered Tasks</h2>
+            <h1>@Model.MemberedTasks.Count</h1>
+        </div>
+    </div>
+</div>

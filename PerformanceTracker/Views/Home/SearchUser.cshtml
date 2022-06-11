@@ -1,0 +1,21 @@
+﻿@model PerformanceTracker.ViewModels.SearchUserView
+
+@{
+    ViewData["Title"] = "Explore";
+}
+
+<h1>Explore</h1>
+<hr />
+
+<div class="row">
+    @foreach (var t in Model.AllUsers)
+    {
+        @Html.ActionLink(t.Email, "UserDetail", "User",
+         new { userId = t.Id }, // giving parameter to IActionResult function
+         new { @class = "list-group-item list-group-item-action" })//html attribute
+    }
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
